@@ -87,8 +87,67 @@
                 <i class="fa-solid fa-couch mr-2"></i>Uzun Mola
             </button>
         </div>
+
+        <div class="relative flex items-center justify-center">
+            <svg class="w-72 h-72 md:w-80 md:h-80 drop-shadow-2xl" viewBox="0 0 240 240">
+                <circle cx="120" cy="120" r="102" stroke="currentColor" stroke-width="8" class="text-white/5" fill="none"></circle>
+                <circle id="progress-circle" class="progress-ring-circle text-sky-400" stroke-linecap="round" cx="120" cy="120" r="102" stroke="currentColor" stroke-width="8" stroke-dasharray="640.88" stroke-dashoffset="0" fill="none"></circle>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center space-y-2">
+                <span id="timer-display" class="font-mono text-6xl md:text-7xl font-bold tracking-tight text-gray-700 drop-shadow-lg">25:00</span>
+                <p id="active-task-label" class="text-xs text-sky-300/80 max-w-[180px] truncate px-3 py-1 rounded-full bg-white/5 border border-white/5">
+                    <i class="fa-regular fa-bookmark mr-1"></i> Görev seçilmedi
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x4">
+            <button id="reset-btn" onclick="resetTimer()" class="glass-panel w-12 h-12 rounded-2xl flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-white/10 active:scale-95 transition-all" title="Sıfırla">
+                <i class="fa-solid fa-rotate-right text-lg"></i>
+            </button>
+
+            <button id="play-btn" onclick="toggleTimer()" class="glass-panel glow-effect px-8 py-4 rounded-2xl flex items-center space-x-3 bg-sky-500 text-slate-950 font-extrabold text-lg hover:bg-sky-400 active:scale-95 transition-all shadow-xl">
+                <i id="play-icon" class="fa-solid fa-play"></i>
+                <span id="play-text">Başlat</span>
+            </button>
+
+            <button id="skip-btn" onclick="skipSession()" class="glass-panel w-12 h-12 rounded-2xl flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-white/10 active:scale-95 transition-all" title="Atla">
+                <i class="fa-solid fa-forward text-lg"></i>
+            </button>
+        </div>
+
+        <div class="flex items-center space-x-3 text-xs text-gray-400">
+            <span>Hızlı Ayar:</span>
+            <button onclick="addTime(-5)" class="px-2.5 py-1 rounded-lg glass-panel hover:bg-white/5 hover:text-gray-700 transition-colors">-5 dk</button>
+            <button onclick="addTime(5)" class="px-2.5 py-1 rounded-lg glass-panel hover:bg-white/5 hover:text-gray-700 transition-colors">+5 dk</button>
+            <button onclick="addTime(10)" class="px-2.5 py-1 rounded-lg glass-panel hover:bg-white/5 hover:text-gray-700 transition-colors">+10 dk</button>
+        </div>
     </section>
 
+    <section class="lg:col-span-5 flex flex-col space-y-6">
+        <div class="glass-panel p-5 rounded-3xl space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-list-check text-sky-400"></i>
+                    <h2 class="font-bold text-sm tracking-wide">Görev Takibi</h2>
+                </div>
+                <span id="completed-task-count" class="text-xs text-gray-400">0/0 Tamamlandı</span>
+            </div>
+
+            <form id="add-task-form" onsubmit="handleAddTask(event)" class="flex space-x-2">
+                <input type="text" id="task-input" placeholder="Bugün ne üzerine çalışacaksın?" class="flex-1 bg-black/10 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-sky-400/50 transition-colors">
+                <button type="submit" class="bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/30 px-4 rounded-xl text-sm font-semibold transition-colors">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </form>
+
+            <div id="task-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                <p id="empty-tasks-msg" class="text-center text-xs text-gray-500 py-4">Henüz görev eklenmedi.</p>
+            </div>
+        </div>
+
+        
+    </section>
 </main>
 
 </body>
