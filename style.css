@@ -1,0 +1,75 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.4);
+    border-radius: 9999px;
+}
+
+.theme-zen {
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.25);
+    --text-main: #f8fafc;
+}
+
+.theme-sunset {
+    --bg-gradient: linear-gradient(135deg, #2d1b2e 0%, #170f1c 100%);
+    --card-bg: rgba(45, 27, 46, 0.75);
+    --accent: #f43f5e;
+    --accent-glow: rgba(244, 63, 94, 0.25);
+    --text-main: #fff1f2;
+}
+
+.theme-cyber {
+    --bg-gradient: linear-gradient(135deg, #050515 0%, #0a0a23 100%);
+    --card-bg: rgba(15, 15, 38, 0.8);
+    --accent: #a855f7;
+    --accent-glow: rgba(168, 85, 247, 0.3);
+    --text-main: #faf5ff;
+}
+
+.theme-forest {
+    --bg-gradient: linear-gradient(135deg, #062c1e 0%, #021a12 100%);
+    --card-bg: rgba(6, 44, 30, 0.75);
+    --accent: #10b981;
+    --accent-glow: rgba(16, 185, 129, 0.25);
+    --text-main: #ecfdf5;
+}
+
+body {
+    background: var(--bg-gradient);
+    color: var(--text-main);
+    min-height: 100vh;
+    transition: background 0.5s ease, color 0.5s ease;
+}
+
+.glass-panel {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glow-effect {
+    box-shadow: 0 0 35px var(--accent-glow);
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 0.35s ease-in-out;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}

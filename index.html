@@ -13,6 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="style.css">
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -94,7 +96,7 @@
                 <circle id="progress-circle" class="progress-ring-circle text-sky-400" stroke-linecap="round" cx="120" cy="120" r="102" stroke="currentColor" stroke-width="8" stroke-dasharray="640.88" stroke-dashoffset="0" fill="none"></circle>
             </svg>
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center space-y-2">
-                <span id="timer-display" class="font-mono text-6xl md:text-7xl font-bold tracking-tight text-gray-700 drop-shadow-lg">25:00</span>
+                <span id="timer-display" class="font-mono text-6xl md:text-7xl font-bold tracking-tight text-white drop-shadow-lg">25:00</span>
                 <p id="active-task-label" class="text-xs text-sky-300/80 max-w-[180px] truncate px-3 py-1 rounded-full bg-white/5 border border-white/5">
                     <i class="fa-regular fa-bookmark mr-1"></i> Görev seçilmedi
                 </p>
@@ -102,25 +104,25 @@
         </div>
 
         <div class="flex items-center space-x4">
-            <button id="reset-btn" onclick="resetTimer()" class="glass-panel w-12 h-12 rounded-2xl flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-white/10 active:scale-95 transition-all" title="Sıfırla">
+            <button id="reset-btn" onclick="resetTimer()" class="glass-panel w-12 h-12 rounded-2xl flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all" title="Sıfırla">
                 <i class="fa-solid fa-rotate-right text-lg"></i>
             </button>
 
-            <button id="play-btn" onclick="toggleTimer()" class="glass-panel glow-effect px-8 py-4 rounded-2xl flex items-center space-x-3 bg-sky-500 text-slate-950 font-extrabold text-lg hover:bg-sky-400 active:scale-95 transition-all shadow-xl">
+            <button id="play-btn" onclick="toggleTimer()" class="glass-panel glow-effect px-8 py-4 rounded-2xl flex items-center space-x-3 bg-sky-400 text-slate-950 font-extrabold text-lg hover:bg-sky-300 active:scale-95 transition-all shadow-lg shadow-sky-500/20 border border-sky-300/50">
                 <i id="play-icon" class="fa-solid fa-play"></i>
                 <span id="play-text">Başlat</span>
             </button>
 
-            <button id="skip-btn" onclick="skipSession()" class="glass-panel w-12 h-12 rounded-2xl flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-white/10 active:scale-95 transition-all" title="Atla">
+            <button id="skip-btn" onclick="skipSession()" class="glass-panel w-12 h-12 rounded-2xl flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all" title="Atla">
                 <i class="fa-solid fa-forward text-lg"></i>
             </button>
         </div>
 
         <div class="flex items-center space-x-3 text-xs text-gray-400">
             <span>Hızlı Ayar:</span>
-            <button onclick="addTime(-5)" class="px-2.5 py-1 rounded-lg glass-panel hover:bg-white/5 hover:text-gray-700 transition-colors">-5 dk</button>
-            <button onclick="addTime(5)" class="px-2.5 py-1 rounded-lg glass-panel hover:bg-white/5 hover:text-gray-700 transition-colors">+5 dk</button>
-            <button onclick="addTime(10)" class="px-2.5 py-1 rounded-lg glass-panel hover:bg-white/5 hover:text-gray-700 transition-colors">+10 dk</button>
+            <button onclick="addTime(-5)" class="px-2.5 py-1 rounded-lg glass-panel hover:bg-white/5 hover:text-white transition-colors">-5 dk</button>
+            <button onclick="addTime(5)" class="px-2.5 py-1 rounded-lg glass-panel hover:bg-white/5 hover:text-white transition-colors">+5 dk</button>
+            <button onclick="addTime(10)" class="px-2.5 py-1 rounded-lg glass-panel hover:bg-white/5 hover:text-white transition-colors">+10 dk</button>
         </div>
     </section>
 
@@ -142,7 +144,7 @@
             </form>
 
             <div id="task-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                <p id="empty-tasks-msg" class="text-center text-xs text-gray-500 py-4">Henüz görev eklenmedi.</p>
+                <p id="empty-tasks-msg" class="text-center text-xs text-white py-4">Henüz görev eklenmedi.</p>
             </div>
         </div>
 
@@ -160,33 +162,33 @@
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-white/5 p-3 rounded-2xl space-y-2 border border-white/5">
                     <div class="flex items-center justify-between text-xs">
-                        <span class="flex items-center space-x-1.5 text-gray-500 font-medium">
+                        <span class="flex items-center space-x-1.5 text-white font-medium">
                             <i class="fa-solid fa-cloud-rain text-sky-400"></i>
                             <span>Yağmur</span>
                         </span>
-                        <span id="vol-rain-val" class="text-gray-500 font-mono text-[10px]">0%</span>
+                        <span id="vol-rain-val" class="text-white font-mono text-[10px]">0%</span>
                     </div>
                     <input type="range" id="sound-rain" min="0" max="100" value="0" oninput="updateSoundVolume('rain', this.value)" class="w-full accent-sky-400 h-1.5 bg-black/40 rounded-lg apperance-none cursor-pointer">
                 </div>
                 
                 <div class="bg-white/5 p-3 rounded-2xl space-y-2 border border-white/5">
                     <div class="flex items-center justify-between text-xs">
-                        <span class="flex items-center space-x1.5 text-gray-500 font-medium">
+                        <span class="flex items-center space-x-1.5 text-white font-medium">
                             <i class="fa-solid fa-tree text-emerald-400"></i>
                             <span>Rüzgar</span>
                         </span>
-                        <span id="vol-forest-val" class="text-gray-500 font-mono text-[10px]">0%</span>
+                        <span id="vol-forest-val" class="text-white font-mono text-[10px]">0%</span>
                     </div>
                     <input type="range" id="sound-forest" min="0" max="100" value="0" oninput="updateSoundVolume('forest', this.value)" class="w-full accent-emerald-400 h-1.5 bg.black/40 rounded-lg apperance-none cursor-pointer">
                 </div>
 
                 <div class="bg-white/5 p-3 rounded-2xl space-y-2 border border-white/5">
                     <div class="flex items-center justify-between text-xs">
-                        <span class="flex items-center justify-between text-xs">
+                        <span class="flex items-center justify-between space-x-1.5 text-white text-xs">
                             <i class="fa-solid fa-wave-square text-purple-400"></i>
                             <span>Gürültü</span>
                         </span>
-                        <span id="vol-noise-val" class="text-gray-500 font-mono text-[10px]">0%</span>
+                        <span id="vol-noise-val" class="text-white font-mono text-[10px]">0%</span>
                     </div>
                     <input type="range" id="sound-noise" min="0" max="100" value="0" oninput="updateSoundVolume('noise', this.value)" class="w-full accent-purple-400 h-1.5 bg-black/40 rounded-lg apperance-none cursor-pointer">
                 </div>
@@ -195,7 +197,7 @@
     </section>
 </main>
 
-<footer class="w-full max-w-6xl mx-auto px-6 py-4 text-center text-xs text-gray-500 flex flex-col md:flex-row justify-between items-center gap-2 border-t border-white/5">
+<footer class="w-full max-w-6xl mx-auto px-6 py-4 text-center text-xs text-white flex flex-col md:flex-row justify-between items-center gap-2 border-t border-white/5">
     <div>Tamamlanan Oturum Sayısı: <strong id="completed-pomodoros-count" class="text-sky-400">0</strong></div>
     <div>FocusSpace &copy; 2026 &bull; Verimlilik Rehberin</div>
 </footer>
