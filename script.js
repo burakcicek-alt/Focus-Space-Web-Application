@@ -157,3 +157,44 @@ function handleSessionComplete() {
         }
     }
 }
+
+function handleAddTask(e) {
+    e.preventDefault();
+    const input = document.getElementById('task-input');
+    const title = input.value.trim();
+    if (!title) return;
+
+    const newTask = {
+        id: Date.now().toString(),
+        title: title,
+        completed: false,
+        completedPomodoros: 0
+    };
+
+    state.tasks.push(newTask);
+
+    if (!state.activeTaskId) {
+        setActiveTask(newTask.id);
+    }
+
+    input.value = '';
+    renderTasks();
+    saveLocalStorage();
+}
+
+function deleteTask(id) {
+    state.tasks = state.tasks.filter(t => t.id !== id);
+    if (state.activeTaskId === id) {
+        state.activeTaskId = state.tasks.length > 0 ? state.tasks[0].id : null;
+        updateActiveTaskLabel();
+    }
+    renderTasks();
+    saveLocalStorage();
+}
+
+function setActiveTask(id) {
+    state.activeTaskId = id;
+    updateActiveTaskLabel();
+    renderTasks();
+    saveLocalStorage();
+}
