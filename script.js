@@ -198,3 +198,12 @@ function setActiveTask(id) {
     renderTasks();
     saveLocalStorage();
 }
+
+function updateActiveTaskLabel() {
+    const task = state.tasks.find(t => t.id === state.activeTaskId);
+    if (task) {
+        activeTaskLabel.innerHTML = `📌 ${task.title}`;
+    } else {
+        activeTaskLabel.innerHTML = `📌 Görev seçilmedi`;
+    }
+}
