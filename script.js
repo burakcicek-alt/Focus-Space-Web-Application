@@ -5,7 +5,7 @@ const state = {
     shortBreak: 5 * 60,
     longBreak: 15 * 60,
   },
-  timeleft: 25 * 60,
+  timeLeft: 25 * 60,
   totalTime: 25 * 60,
   isRunning: false,
   timerInterval: null,
@@ -222,6 +222,16 @@ function renderTasks() {
     });
 }
 
+function toggleTaskCompleted(id) {
+  const task = state.tasks.find(t => t.id === id);
+
+  if (task) {
+    task.completed = !task.completed;
+    renderTasks();
+    saveLocalStorage();
+  }
+}
+
 function deleteTask(id) {
   state.tasks = state.tasks.filter((t) => t.id !== id);
   if (state.activeTaskId === id) {
@@ -240,10 +250,84 @@ function setActiveTask(id) {
 }
 
 function updateActiveTaskLabel() {
+  if (!activeTaskLabel) return;
+
   const task = state.tasks.find((t) => t.id === state.activeTaskId);
+
   if (task) {
     activeTaskLabel.innerHTML = `📌 ${task.title}`;
   } else {
     activeTaskLabel.innerHTML = `📌 Görev seçilmedi`;
+  }
+}
+
+function updateStatsUI() {
+
+  const completedPomoCount = document.getElementById('completed-pomodoros-count');
+  const focusTimeCount = document.getElementById('total-focus-mins');
+  const streakCount = document.getElementById('streak-count');
+
+  if (completedPomoCount) completedPomoCount.textContent = state.completedPomodoros;
+  if (focusTimeCount) focusTimeCount.textContent = `${state.totalFocusMinutesToday} dk`;
+  if (streakCount) streakCount.textContent = `${state.streakDays}`;
+
+}
+
+function playNotificationSound() {
+  if (!state.soundEnabled) return;
+
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
+
+    gain.gain.setTargetAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.3);
+  } catch (e) {
+    console.warn('Web Audio API desteklenmiyor vea engellendi:', e);
+  }
+}
+
+function saveLocalStorage() {
+  const dataToSave = {
+    completedPomodoros: state.completedPomodoros,
+    totalFocusMinutesToday: state.totalFocusMinutesToday,
+    streakDays: state.streakDays,
+    activeTaskId: state.activeTaskId,
+    tasks: state.tasks,
+    soundEnabled: state.soundEnabled,
+    autoStartBreaks: state.autoStartBreaks,
+    themeIndex: state.themeIndex
+  };
+  localStorage.setItem('focusspace_state', JSON.stringify(dataToSave));
+}
+
+function loadLocalStorage() {
+  const saved = localStorage.getItem('focusspace_state');
+  if(!saved) return;
+
+  try {
+    const parsed = JSON.parse(saved);
+    state.completedPomodoros = parsed.completedPomodoros || 0;
+    state.totalFocusMinutesToday = parsed.totalFocusMinutesToday || 0;
+    state.streakDays = parsed.streakDays || 1;
+    state.activeTaskId = parsed.activeTaskId || null;
+    state.tasks = parsed.tasks || [];
+    state.soundEnabled = parsed.soundEnabled ?? true;
+    state.autoStartBreaks = parsed.themeIndex || 0;
+
+    updateActiveTaskLabel();
+  } catch (e) {
+    console.error('LocalStorage verisi okunamadı:', e);
   }
 }
