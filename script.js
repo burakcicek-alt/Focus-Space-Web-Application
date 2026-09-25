@@ -19,6 +19,17 @@ const state = {
   themeIndex: 0,
 };
 
+const sounds = {
+  rain: new Audio('assets/sounds/mixkit-light-rain-loop-2393.wav'),
+  forest: new Audio('assets/sounds/mixkit-forest-birds-ambience-1210.wav'),
+  noise: new Audio('assets/sounds/themediaguy-soft-soothing-deep-white-noise-378857.mp3'),
+  notification: new Audio('assets/sounds/universfield-new-notification-09-352705.mp3')
+};
+
+["rain", "forest", "noise"].forEach(type => {
+  if (sounds[type]) sounds[type].loop = true;
+});
+
 const themes = ["theme-zen", "theme-sunset", "theme-cyber", "theme-forest"];
 
 const timerDisplay = document.getElementById("timer-display");
@@ -135,8 +146,8 @@ function updateTimerDisplay() {
 
   if (progressCircle) {
     const progress = state.timeLeft / state.totalTime;
-  const offset = circleCircumference - progress * circleCircumference;
-  progressCircle.style.strokeDashoffset = offset;
+    const offset = circleCircumference - (progress * circleCircumference);
+    progressCircle.style.strokeDashoffset = offset;
   }
 }
 
@@ -268,7 +279,7 @@ function updateStatsUI() {
   const streakCount = document.getElementById('streak-count');
 
   if (completedPomoCount) completedPomoCount.textContent = state.completedPomodoros;
-  if (focusTimeCount) focusTimeCount.textContent = `${state.totalFocusMinutesToday} dk`;
+  if (focusTimeCount) focusTimeCount.textContent = `${state.totalFocusMinutesToday}`;
   if (streakCount) streakCount.textContent = `${state.streakDays}`;
 
 }
@@ -276,25 +287,13 @@ function updateStatsUI() {
 function playNotificationSound() {
   if (!state.soundEnabled) return;
 
-  try {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+const sound = sounds.notification;
+  if (sound) {
+    sound.loop = false;
+    sound.currentTime = 0;
+    sound.volume = 1.0;
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
-
-    gain.gain.setTargetAtTime(0.1, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.3);
-  } catch (e) {
-    console.warn('Web Audio API desteklenmiyor vea engellendi:', e);
+    sound.play().catch(e => console.log("Zil sesi oynatılamadı:", e));
   }
 }
 
@@ -323,11 +322,107 @@ function loadLocalStorage() {
     state.streakDays = parsed.streakDays || 1;
     state.activeTaskId = parsed.activeTaskId || null;
     state.tasks = parsed.tasks || [];
+
     state.soundEnabled = parsed.soundEnabled ?? true;
-    state.autoStartBreaks = parsed.themeIndex || 0;
+    state.autoStartBreaks = parsed.autoStartBreaks ?? false;
+    state.themeIndex = parsed.themeIndex || 0;
 
     updateActiveTaskLabel();
   } catch (e) {
     console.error('LocalStorage verisi okunamadı:', e);
   }
+}
+
+function cycleTheme() {
+  state.themeIndex = (state.themeIndex + 1) % themes.length;
+  document.body.className = `${themes[state.themeIndex]} h-full flex flex-col jusfify-between font-sans antialiased overflow-x-hidden select-none`;
+  saveLocalStorage();
+}
+
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch((err) => {
+      console.warn(`Tam ekran moduna geçilemedi: ${err.message}`);
+    });
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
+}
+
+function openSettingsModal() {
+  const modal = document.getElementById("settings-modal");
+  const modalCard = document.getElementById("settings-modal-card");
+  if (!modal) return;
+
+  document.getElementById("setting-focus").value = state.durations.focus / 60;
+  document.getElementById("setting-shortBreak").value = state.durations.shortBreak / 60;
+  document.getElementById("setting-longBreak").value = state.durations.longBreak / 60;
+
+  document.getElementById("setting-sound").checked = state.soundEnabled;
+  document.getElementById("setting-autostart").checked = state.autoStartBreaks;
+
+  modal.classList.remove("opacity-0","pointer-events-none");
+  if (modalCard) modalCard.classList.remove("scale-95");
+}
+
+function closeSettingsModal() {
+  const modal = document.getElementById("settings-modal");
+  const modalCard = document.getElementById("settings-modal-card");
+  if (!modal) return;
+
+  modal.classList.add("opacity-0", "pointer-events-none");
+  if (modalCard) modalCard.classList.add("scale-95");
+}
+
+function saveSettings() {
+  const focusVal = parseInt(document.getElementById("setting-focus").value) || 25;
+  const shortVal = parseInt(document.getElementById("setting-shortBreak").value) || 5;
+  const longVal = parseInt(document.getElementById("setting-longBreak").value) || 15;
+
+  state.durations.focus = focusVal * 60;
+  state.durations.shortBreak = shortVal * 60;
+  state.durations.longBreak = longVal * 60;
+
+  state.soundEnabled = document.getElementById("setting-sound").checked;
+  state.autoStartBreaks = document.getElementById("setting-autostart").checked;
+
+  resetTimer();
+  saveLocalStorage();
+  closeSettingsModal();
+}
+
+function updateSoundVolume(type, val) {
+  const label = document.getElementById(`vol-${type}-val`);
+  if (label) {
+    label.textContent = `${val}%`;
+  }
+
+  const sound = sounds[type];
+  if (sound) {
+    const volume = val / 100;
+    sound.volume = volume;
+
+    if (volume > 0 && sound.paused) {
+      sound.play().catch(e => console.log("Ses oynatma engellendi:", e));
+    } else if (volume === 0 && !sound.paused) {
+      sound.pause();
+    }
+  }
+}
+
+function stopAllSounds() {
+  ["rain", "forest", "noise"].forEach((type) => {
+    const slider = document.getElementById(`sound-${type}`);
+    const label = document.getElementById(`vol-${type}-val`);
+    if (slider) slider.value = 0;
+    if (label) label.textContent = "0%";
+
+    if (sounds[type]) {
+      sounds[type].pause();
+      sounds[type].volume = 0;
+      sounds[type].currentTime = 0;
+    }
+  });
 }

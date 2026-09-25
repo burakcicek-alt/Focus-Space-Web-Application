@@ -91,16 +91,22 @@
         </div>
 
         <div class="relative flex items-center justify-center">
-            <svg class="w-72 h-72 md:w-80 md:h-80 drop-shadow-2xl" viewBox="0 0 240 240">
-                <circle cx="120" cy="120" r="102" stroke="currentColor" stroke-width="8" class="text-white/5" fill="none"></circle>
-                <circle id="progress-circle" class="progress-ring-circle text-sky-400" stroke-linecap="round" cx="120" cy="120" r="102" stroke="currentColor" stroke-width="8" stroke-dasharray="640.88" stroke-dashoffset="0" fill="none"></circle>
+
+            <svg class="w-64 h-64 md:w-80 md:h-80 drop-shadow-2xl transform rotate(-90deg) transform-origin: center;" viewBox="0 0 240 240">
+                <circle cx="120" cy="120" r="102" stroke="currentColor" stroke-width="8" class="text-white/5" fill="none">
+                </circle>
+
+                <circle id="progress-circle" class="progress-ring-circle stroke-sky-400 fill-transparent stroke-[8] transition-all duration-1000 ease-linear" stroke-linecap="round" cx="120" cy="120" r="102" style="stroke-dasharray: 640.88; stroke-dashoffset: 0; stroke-linecap: round;">
+                </circle>
             </svg>
+
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center space-y-2">
                 <span id="timer-display" class="font-mono text-6xl md:text-7xl font-bold tracking-tight text-white drop-shadow-lg">25:00</span>
                 <p id="active-task-label" class="text-xs text-sky-300/80 max-w-[180px] truncate px-3 py-1 rounded-full bg-white/5 border border-white/5">
                     <i class="fa-regular fa-bookmark mr-1"></i> Görev seçilmedi
                 </p>
             </div>
+
         </div>
 
         <div class="flex items-center space-x4">
@@ -175,7 +181,7 @@
                     <div class="flex items-center justify-between text-xs">
                         <span class="flex items-center space-x-1.5 text-white font-medium">
                             <i class="fa-solid fa-tree text-emerald-400"></i>
-                            <label for="sound-forest">Rüzgar</label>
+                            <label for="sound-forest">Doğa</label>
                         </span>
                         <span id="vol-forest-val" class="text-white font-mono text-[10px]">0%</span>
                     </div>
@@ -202,54 +208,62 @@
     <div>FocusSpace &copy; 2026 &bull; Verimlilik Rehberin</div>
 </footer>
 
-<div id="settings-modal" class="fixed inset-0 z-1 bg-black/70 flex items-center justify-center p-4 opacity-0 transition-all duration-300">
-    <div class="glass-panel w-full max-w-md rounded-3xl p-6 space-y-6 border border-white/10 shadow-2xl scale-95 transition-transform duration-300 transform" id="settings-modal-card">
-        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+<div id="settings-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+
+    <div class="bg-slate-900 w-full max-w-md rounded-3xl p-6 space-y-6 border border-white/10 shadow-2xl scale-95 transition-transform duration-300 transform" id="settings-modal-card">
+
+        <div class="flex items-center justify-between mb-6">
             <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-gear text-sky-400 text-lg"></i>
-                <h3 class="font-bold text-lg text-white">Süre ve Tercihler</h3>
+                <h3 class="font-bold text-lg flex items-center gap-2">Süre ve Tercihler</h3>
             </div>
-            <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-white transition-colors">
+            <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg/white/5 cursor-pointer transition-all">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
         </div>
 
         <div class="space-y-4">
+
             <p class="text-xs font-semibold text-gray-400 tracking-wider uppercase">Zamanlayıcı Süreleri (Dakika)</p>
-            <div class="grid grid-cols-3 gap-3">
+
+            <div class="grid grid-cols-3 gap-1">
+
                 <div class="space-y-1">
-                    <label class="text-xs text-gray-300">Odaklanma</label>
+                    <label for="setting-focus" class="text-xs text-gray-300">Odaklanma</label>
                     <input type="number" id="setting-focus" min="1" max="120" value="25" class="w-full bg-black/30 border border-white/10 rounded-xl px-3 py-2 text-center font-mono font-bold text-sky-400 focus:outline-none">
                 </div>
+
                 <div class="space-y-1">
-                    <label class="text-xs text-gray-300">Kısa Mola</label>
+                    <label for="setting-shortBreak" class="text-xs text-gray-300">Kısa Mola</label>
                     <input type="number" id="setting-shortBreak" min="1" max="60" value="5" class="w-full bg-black/30 border border-white/10 rounded-xl px-3 py-2 text-center font-mono font-bold text-teal-400 focus:outline-none">
                 </div>
+
                 <div class="space-y-1">
-                    <label class="text-xs text-gray-300">Uzun Mola</label>
+                    <label for="setting-longBreak" class="text-xs text-gray-300">Uzun Mola</label>
                     <input type="number" id="setting-longBreak" min="1" max="90" value="15" class="w-full bg-black/30 border border-white/10 rounded-xl px-3 py-2 text-center font-mono font-bold text-purple-400 focus:outline-none">
                 </div>
+
             </div>
+
         </div>
 
         <div class="space-y-3 border-t border-white/10 pt-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-white">Sesli Uyarı</p>
-                    <p class="text-xs text-gray-400">Süre bittiğinde zili çal</p>
+                    <label for="setting-sound" class="text-sm font-medium text-white">Süre bittiğinde zili çal</label>
                 </div>
                 <input type="checkbox" id="setting-sound" checked class="w-5 h-5 accent-sky-400 rounded cursor-pointer">
             </div>
+
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-white">Otomatik Mola</p>
-                    <p class="text-xs text-gray-400">Molayı otomatik başlat</p>
+                    <label for="setting-autostart" class="text-sm font-medium text-white">Molayı otomatik başlat</label>
                 </div>
                 <input type="checkbox" id="setting-autostart" class="w-5 h-5 accent-sky-400 rounded cursor-pointer">
             </div>
         </div>
 
-        <div class="pt-2">
+        <div class="mt-6 flex-justfiy-end">
             <button onclick="saveSettings()" class="w-full py-3 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-2xl transition-all shadow-lg">
                 Ayarları kaydet ve Uygula
             </button>
