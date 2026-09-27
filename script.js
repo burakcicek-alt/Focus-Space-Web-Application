@@ -175,8 +175,6 @@ function handleSessionComplete() {
 
     if (state.autoStartBreaks) {
       startTimer();
-    } else {
-      switchMode("focus");
     }
   }
 }
@@ -298,6 +296,8 @@ const sound = sounds.notification;
 }
 
 function saveLocalStorage() {
+const today = new Date().toISOString().split('T')[0];
+
   const dataToSave = {
     completedPomodoros: state.completedPomodoros,
     totalFocusMinutesToday: state.totalFocusMinutesToday,
@@ -306,7 +306,8 @@ function saveLocalStorage() {
     tasks: state.tasks,
     soundEnabled: state.soundEnabled,
     autoStartBreaks: state.autoStartBreaks,
-    themeIndex: state.themeIndex
+    themeIndex: state.themeIndex,
+    lastActive: today
   };
   localStorage.setItem('focusspace_state', JSON.stringify(dataToSave));
 }
@@ -317,6 +318,16 @@ function loadLocalStorage() {
 
   try {
     const parsed = JSON.parse(saved);
+    const today = new Date().toISOString().split('T')[0];
+
+    if (parsed.lastActiveDate && parsed.lastActiveDate !== today) {
+      state.completedPomodoros = 0;
+      state.totalFocusMinutesToday = 0;
+    } else {
+      state.completedPomodoros = parsed.completedPomodoros || 0;
+      state.totalFocusMinutesToday = parsed.totalFocusMinutesToday || 0;
+    }
+
     state.completedPomodoros = parsed.completedPomodoros || 0;
     state.totalFocusMinutesToday = parsed.totalFocusMinutesToday || 0;
     state.streakDays = parsed.streakDays || 1;
